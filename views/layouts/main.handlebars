@@ -8,9 +8,15 @@
 
 	{{{body}}}
 
-	<script src="/socket.io/socket.io.js"></script>
+	<div id="socket">
+	</div>
+
+	<script src="//cdn.socket.io/socket.io-1.3.7.js"></script>
 	<script>
 	var socket = io();
+	socket.on('interval event', function(msg){
+		document.getElementById('socket').innerHTML = msg;
+	});
 	</script>
 </body>
 </html>
