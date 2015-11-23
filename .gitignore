@@ -1,3 +1,5 @@
 node_modules
 app/build
 app/static
+nodejs-express-starter.sublime-project
+nodejs-express-starter.sublime-workspace
