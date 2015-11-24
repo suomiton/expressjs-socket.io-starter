@@ -3,3 +3,5 @@ app/build
 app/static
 nodejs-express-starter.sublime-project
 nodejs-express-starter.sublime-workspace
+npm-debug.log
+bower_components
