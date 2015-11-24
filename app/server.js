@@ -20,11 +20,3 @@ var server = app.listen(5000, events.express.onStartup);
 var io = require('socket.io').listen(server);
 
 io.on('connection', events.socket.socketUserConnected);
-
-var seconds = 0;
-
-setInterval(function() {
-	seconds++;
-	console.log('broadcasting');
-	io.emit('interval event', 'Time passed: ' + seconds + 's');
-}, 1000);

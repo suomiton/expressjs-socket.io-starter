@@ -9,7 +9,15 @@ module.exports = {
 	},
 	socket: {
 		socketUserConnected: function(socket) {
-			console.log('a user connected');
+			console.log('A user connected. Starting polling sequence');
+
+			var seconds = 0,
+				interval = 5; // seconds
+
+			setInterval(function() {
+				seconds = seconds + interval;				
+				socket.emit('interval event', 'Time passed: ' + seconds + 's');
+			}, (interval * 1000));
 		}
 	}	
 };
