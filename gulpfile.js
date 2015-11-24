@@ -28,20 +28,23 @@ var browserSyncActive = false;
 
 var paths = {
   vendorRoot: 	'bower_components/',
-  sass: 		    'sass/',
-  css:          'css/',
+  sass: 		    ['sass/main.scss'],
   scripts:      'scripts/',
   templates:    'views/',
-  dist:         'static/',
+  dist: {
+    root:       'static/',
+    scripts:    'static/js/',
+    css:        'static/css/'
+  },        
   build:        'build/',
   serverFiles:  ['server.js', 'configuration/*']
 };
 
 var bundleConfigs = [{
   entries: paths.scripts + 'scripts.js',
-  dest: paths.dist,
+  dest: paths.dist.scripts,
   outputName: 'scripts.js',
-  paths: [paths.dist, paths.scripts]
+  paths: [paths.dist.scripts, paths.scripts]
 }];
 
 function onError() {
@@ -58,13 +61,13 @@ function onError() {
 }
 
 gulp.task('clean', function() {
-  return gulp.src([paths.dist, paths.build], {read: false})
+  return gulp.src([paths.dist.scripts, paths.dist.css, paths.build], {read: false})
     .pipe(clean());
 });
 
 gulp.task('bower', function() {
 	return gulp.src(mainBowerFiles())
-    .pipe(gulp.dest(paths.dist));	
+    .pipe(gulp.dest(paths.dist.scripts));	
 });
 
 gulp.task('scripts', function() {
@@ -80,18 +83,18 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('styles', function() {  
-  return gulp.src(paths.sass + 'styles.scss')          
+  return gulp.src(paths.sass)          
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))            
     .pipe(sourcemaps.write())    
-    .pipe(gulp.dest(paths.dist))
+    .pipe(gulp.dest(paths.dist.css))
     .pipe(gulpif(browserSyncActive, browserSync.stream()));
 });
 
 gulp.task('usemin', function () {  
   return gulp.src(paths.templates + '**/*.handlebars')
     .pipe(usemin({
-      assetsDir: __dirname + '/' + appPath + paths.dist,
+      assetsDir: __dirname + '/' + appPath + paths.dist.root,
       outputRelativePath: '../',
       css: [ minifyCss(), rev() ],
       html: [ function() {
