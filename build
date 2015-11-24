@@ -1,0 +1,1 @@
+gulp production ; cd app/build/ ; node server.js
