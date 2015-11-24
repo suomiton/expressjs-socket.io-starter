@@ -16,6 +16,12 @@ var server = app.listen(5000, function () {
   console.log('Example app listening at http://%s:%s', host, port);
 });
 
+// Disable etag headers on responses
+app.disable('etag');
+
+// Set /static as our static content dir
+app.use('/static', express.static(__dirname + "/static/"));
+
 var io = require('socket.io').listen(server);
 
 io.on('connection', function(socket){
