@@ -8,7 +8,7 @@ module.exports = {
 		}	
 	},
 	socket: {
-		socketUserConnected: function(socket) {
+		onUserConnected: function(socket) {
 			console.log('A user connected. Starting polling sequence');
 
 			var seconds = 0,

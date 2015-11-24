@@ -19,4 +19,4 @@ var server = app.listen(5000, events.express.onStartup);
 
 var io = require('socket.io').listen(server);
 
-io.on('connection', events.socket.socketUserConnected);
+io.on('connection', events.socket.onUserConnected);
