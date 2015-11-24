@@ -2,6 +2,9 @@ var appPath = 'app/';
 // Set process path under app directory
 process.chdir(appPath);
 
+var port = process.env.PORT || 8080;
+var proxyAddr = process.env.PROXYADDR || 'localhost';
+
 var gulp = require('gulp'),
   concat = require('gulp-concat'),
   sass = require('gulp-sass'),
@@ -109,7 +112,7 @@ gulp.task('watch', function() {
   browserSyncActive = true;
 
   browserSync.init({
-    proxy: "localhost:5000"
+    proxy: proxyAddr + ':' + port
   });
 
   gulp.watch(paths.scripts + '*', ['reload']);
