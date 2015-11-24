@@ -34,7 +34,7 @@ var paths = {
   templates:    'views/',
   dist:         'static/',
   build:        'build/',
-  serverFiles:  ['server.js']
+  serverFiles:  ['server.js', 'configuration/*']
 };
 
 var bundleConfigs = [{
@@ -93,7 +93,7 @@ gulp.task('usemin', function () {
     .pipe(usemin({
       assetsDir: __dirname + '/' + appPath + paths.dist,
       outputRelativePath: '../',
-      css: [ rev() ],
+      css: [ minifyCss(), rev() ],
       html: [ function() {
         return minifyHtml({ empty: true, comments: true, loose: true });
       } ],
@@ -109,9 +109,9 @@ gulp.task('watch', function() {
     proxy: "localhost:5000"
   });
 
-  gulp.watch(paths.scripts + '/**/*.js', ['reload']);
-  gulp.watch(paths.sass + '/**/*.scss', ['styles']);
-  gulp.watch(paths.templates + '*.html', ['reload']);
+  gulp.watch(paths.scripts + '*', ['reload']);
+  gulp.watch(paths.sass + '*', ['styles']);
+  gulp.watch(paths.templates + '*', ['reload']);
 });
 
 gulp.task('nodemon', function() {
@@ -126,7 +126,7 @@ gulp.task('nodemon', function() {
 });
 
 gulp.task('copyServerToBuild', function() {
-  return gulp.src(paths.serverFiles)
+  return gulp.src(paths.serverFiles, {base: '.'})
     .pipe(gulp.dest(paths.build));
 });
 
