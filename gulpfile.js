@@ -1,4 +1,5 @@
 var appPath = 'app/';
+// Set process path under app directory
 process.chdir(appPath);
 
 var gulp = require('gulp'),
@@ -32,7 +33,8 @@ var paths = {
   scripts:      'scripts/',
   templates:    'views/',
   dist:         'static/',
-  build:        'build/'
+  build:        'build/',
+  serverFiles:  ['server.js']
 };
 
 var bundleConfigs = [{
@@ -77,12 +79,6 @@ gulp.task('scripts', function() {
   return mergeStream.apply(gulp, _.map(bundleConfigs, browserifyMe));  
 });
 
-/*gulp.task('uglifyJs', function() {
-  return gulp.src(paths.dist + '*.js')
-    .pipe(uglify())
-    .pipe(gulp.dest(paths.dist));
-});*/
-
 gulp.task('styles', function() {  
   return gulp.src(paths.sass + 'styles.scss')          
     .pipe(sourcemaps.init())
@@ -92,25 +88,18 @@ gulp.task('styles', function() {
     .pipe(gulpif(browserSyncActive, browserSync.stream()));
 });
 
-/*gulp.task('minifyCss', function() {  
-  return gulp.src(paths.dist + 'styles.css')    
-    .pipe(sourcemaps.init())
-    .pipe(minifyCss({processImport: false}))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(paths.dist));
-});*/
-
 gulp.task('usemin', function () {  
   return gulp.src(paths.templates + '**/*.handlebars')
     .pipe(usemin({
       assetsDir: __dirname + '/' + appPath + paths.dist,
+      outputRelativePath: '../',
       css: [ rev() ],
       html: [ function() {
         return minifyHtml({ empty: true, comments: true, loose: true });
       } ],
       js: [ uglify(), rev() ]      
     }))
-    .pipe(gulp.dest(paths.build));
+    .pipe(gulp.dest(paths.build + 'views/'));
 });
 
 gulp.task('watch', function() {
@@ -125,12 +114,6 @@ gulp.task('watch', function() {
   gulp.watch(paths.templates + '*.html', ['reload']);
 });
 
-gulp.task('reload', ['scripts'], browserSync.reload);
-
-gulp.task('default', ['clean'], function() {  
-  gulp.start('nodemon');
-});
-
 gulp.task('nodemon', function() {
   return nodemon({ 
     script: 'server.js'
@@ -142,6 +125,17 @@ gulp.task('nodemon', function() {
   });
 });
 
+gulp.task('copyServerToBuild', function() {
+  return gulp.src(paths.serverFiles)
+    .pipe(gulp.dest(paths.build));
+});
+
+gulp.task('reload', ['scripts'], browserSync.reload);
+
+gulp.task('default', function() {  
+  return runSequence('clean', 'styles', 'scripts', 'nodemon');
+});
+
 gulp.task('production', function() {
-  return runSequence('clean', 'styles', 'scripts', 'usemin');
+  return runSequence('clean', 'styles', 'scripts', 'usemin', 'copyServerToBuild');
 });
