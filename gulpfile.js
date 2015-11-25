@@ -122,10 +122,8 @@ gulp.task('watch', function(cb) {
 
 gulp.task('nodemon', function() {
   return nodemon({ 
-    script: 'server.js'
-    //ext: 'handlebars js',
-    //ignore: ['ignored.js'],
-    //tasks: ['watch'] 
+    script: 'server.js',
+    ignore: [paths.scripts + '*.js', '*.scss'] // We want browsersync to handle browser reloading on UI scripts
   }).on('start', function() {
     gulp.start('watch');
   });
@@ -136,7 +134,9 @@ gulp.task('copyServerToBuild', function() {
     .pipe(gulp.dest(paths.build));
 });
 
-gulp.task('reload', ['scripts'], browserSync.reload);
+gulp.task('reload', ['scripts'], function() {
+  browserSync.reload();
+});
 
 gulp.task('default', function() {  
   return runSequence('clean', 'styles', 'scripts', 'nodemon');
