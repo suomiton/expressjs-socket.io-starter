@@ -1,1 +1,1 @@
-gulp production ; cd app/build/ ; node server.js
+npm install ; bower install ; gulp production ; cd app/build/ ; node server.js
