@@ -108,6 +108,7 @@ gulp.task('usemin', function () {
     .pipe(gulp.dest(paths.build + 'views/'));
 });
 
+
 gulp.task('watch', function(cb) {
   browserSyncActive = true;
 
